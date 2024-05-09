@@ -63,13 +63,21 @@ class PostController extends Controller
 
     }
 
-    public function show(User $user, Post $post)
-    {
+    public function show($username, $postId){
+        $user =User::where('username', $username) ->firstOrFail();
+        $post =Post::where('id', $postId) ->where('user_id', $user ->id)->first();
+
+        if(!$post){
+            return redirect()->route('posts.index', $username);
+        }
+
         return view('posts.show', [
             'post' => $post,
-            'user' => $user
+            'user'=>$user,
         ]);
+
     }
+
 
     public function destroy(Post $post)
     {
